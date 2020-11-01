@@ -167,7 +167,7 @@ namespace TombolaTicketGenerator
 
             int ticketNumber = 1;
 
-            for (int i = 0; i < 500; i += 2)
+            for (int i = 0; i < 50; i += 2)
             {
                 HtmlNode row = HtmlNode.CreateNode("<tr/>");
 
