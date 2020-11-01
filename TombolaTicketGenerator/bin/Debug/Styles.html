@@ -1,18 +1,18 @@
 ﻿<style>
     .ticket {
         border-collapse: collapse;
-        margin: 0 10 10 10px;        
+        margin: 0 10 10 10px;
     }
 
-    .ticket td {
-        border: 1px solid black !important;
-        font-weight: bold;
-        padding: 6px;
-        min-width: 22px;
-        text-align: center;
-        min-height: 25px;
-        font-size: 14pt;
-    }
+        .ticket td {
+            border: 1px solid black !important;
+            font-weight: bold;
+            padding: 6px;
+            min-width: 22px;
+            text-align: center;
+            min-height: 25px;
+            font-size: 14pt;
+        }
 
     .page {
         border-collapse: collapse;
@@ -28,5 +28,23 @@
     span {
         font-size: 12px;
         padding-left: 10px;
+    }
+
+    @page {
+        @bottom-right {
+            content: "Page " counter(page) " of " counter(pages);
+            font-size: 10px;
+        }
+
+        @bottom-left {
+            content: "https://www.dotnet4techies.com";
+            font-size: 10px;
+        }
+
+        @bottom-center {
+            content: "Tombola Tickets";
+            font-size: 10px;
+            text-decoration: underline;
+        }
     }
 </style>

@@ -1,5 +1,6 @@
 ﻿using HtmlAgilityPack;
 using iText.Html2pdf;
+using iText.Kernel.Pdf;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -166,7 +167,7 @@ namespace TombolaTicketGenerator
 
             int ticketNumber = 1;
 
-            for (int i = 0; i < 50; i += 2)
+            for (int i = 0; i < 500; i += 2)
             {
                 HtmlNode row = HtmlNode.CreateNode("<tr/>");
 
@@ -186,12 +187,30 @@ namespace TombolaTicketGenerator
             using (FileStream pdfDest = File.Open("output.pdf", FileMode.OpenOrCreate))
             {
                 ConverterProperties converterProperties = new ConverterProperties();
+
                 HtmlConverter.ConvertToPdf(oDoc.DocumentNode.OuterHtml, pdfDest, converterProperties);
             }
 
+            //PdfWriter writer = new PdfWriter("output.pdf");
+            //PdfDocument pdfDocument = new PdfDocument(writer);
+            //string header = "pdfHtml Header and footer example using page-events";
+            ////Header headerHandler = new Header(header);
+            ////Footer footerHandler = new Footer();
+
+            ////pdfDocument.AddEventHandler(PdfDocumentEvent.START_PAGE, headerHandler);
+            ////pdfDocument.AddEventHandler(PdfDocumentEvent.END_PAGE, footerHandler);
+
+            //// Base URI is required to resolve the path to source files
+            //ConverterProperties converterProperties = new ConverterProperties();
+            //HtmlConverter.ConvertToDocument(oDoc.DocumentNode.OuterHtml, pdfDocument, converterProperties);
+
+            //// Write the total number of pages to the placeholder
+            ////footerHandler.WriteTotal(pdfDocument);
+            ////pdfDocument.Close();
 
 
-            
+
+
         }
 
         private string generateTicket()
