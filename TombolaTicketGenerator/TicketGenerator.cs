@@ -14,84 +14,217 @@ namespace TombolaTicketGenerator
 {
     public partial class TicketGenerator : Form
     {
-        List<int> listAllottedNumbers = new List<int>();
-        List<int> listAllottedColumns = new List<int>();
+        //List<int> listAllottedNumbers = new List<int>();
+        //List<int> listAllottedColumns = new List<int>();
         Random random = new Random();
+
+
+        //Dictionary<int, int> dic2 = new Dictionary<int, int>();
+        //Dictionary<int, int> dic3 = new Dictionary<int, int>();
 
         public TicketGenerator()
         {
             InitializeComponent();
+
+
+        }
+
+        private Dictionary<int, int[]> getTicketNumbersColumnWise()
+        {
+            List<int> listAllottedNumbers = new List<int>();
+
+            Dictionary<int, int[]> dic = new Dictionary<int, int[]>();
+
+            for (int i = 1; i <= 9; i++)
+            {
+                int[] nums = new int[]
+                {
+                    generateNumberForColumn(i, listAllottedNumbers),
+                    generateNumberForColumn(i, listAllottedNumbers),
+                    generateNumberForColumn(i, listAllottedNumbers)
+                };
+
+                Array.Sort(nums);
+
+                dic[i] = nums;
+            }
+
+            return dic;
+        }
+
+        private Dictionary<int, int[]> getNumberPositionsByRow()
+        {
+            Dictionary<int, int[]> dicRowNumberPlaces = new Dictionary<int, int[]>();
+
+            List<int> one = getFiveNumberPositionsForRow();
+            List<int> two = getFiveNumberPositionsForRow();
+            List<int> three = getFiveNumberPositionsForRow();
+
+            List<int> temp = Enumerable.Range(1, 9).ToList();
+
+            List<int> notfound = temp.Except(one).Except(two).Except(three).ToList();
+
+            List<int> duplicates = one.Intersect(two).Intersect(three).ToList();
+
+            foreach (int not in notfound)
+            {
+                foreach (int d in duplicates)
+                {
+                    if (one.Contains(d) && !one.Contains(not))
+                    {
+                        one.Remove(d);
+                        one.Add(not);
+                        break;
+                    }
+
+                    if (two.Contains(d) && !two.Contains(not))
+                    {
+                        two.Remove(d);
+                        two.Add(not);
+                        break;
+                    }
+                }
+            }
+
+            one.Sort();
+            two.Sort();
+            three.Sort();
+
+            dicRowNumberPlaces.Add(1, one.ToArray());
+            dicRowNumberPlaces.Add(2, two.ToArray());
+            dicRowNumberPlaces.Add(3, three.ToArray());
+
+            return dicRowNumberPlaces;
+        }
+
+        private List<int> getFiveNumberPositionsForRow()
+        {
+            List<int> dic1 = new List<int>();
+
+            for (int i = 1; i <= 5; i++)
+            {
+                dic1.Add(getNextNumberPosition(dic1));
+
+                dic1.Sort();
+            }
+
+            return dic1;
+        }
+
+        private int getNextNumberPosition(List<int> dic)
+        {
+            int c = random.Next(1, 9);
+
+            if (dic.Contains(c))
+            {
+                c = getNextNumberPosition(dic);
+            }
+
+            return c;
+        }
+
+        private int generateNumberForColumn(int c, List<int> listAllottedNumbers)
+        {
+            int startnum = (c - 1) * 10;
+
+            if (startnum == 0) startnum = 1;
+
+            int endnum = (c * 10) - 1;
+
+            if (endnum == 89) endnum = 90;
+
+            int num = random.Next(startnum, endnum);
+
+            if (listAllottedNumbers.Contains(num))
+            {
+                num = generateNumberForColumn(c, listAllottedNumbers);
+            }
+
+            if (!listAllottedNumbers.Contains(num))
+            {
+                listAllottedNumbers.Add(num);
+            }
+
+            return num;
         }
 
         private void btnGenerate_Click(object sender, EventArgs e)
+        {
+            string html = generateTicket();
+
+            string styles = File.ReadAllText("styles.html");
+
+
+
+            HtmlAgilityPack.HtmlDocument oDoc = new HtmlAgilityPack.HtmlDocument();
+            oDoc.LoadHtml(styles + Environment.NewLine + "<table style='border-collapse:unset'/>");
+
+            var table = oDoc.DocumentNode.SelectNodes("table").FirstOrDefault();
+            // var node = HtmlNode.CreateNode(rowToAppend); rowtoapend is row html
+            //table.AppendChild(node);
+
+            int ticketNumber = 1;
+
+            for (int i = 0; i < 100; i += 2)
+            {
+                HtmlNode row = HtmlNode.CreateNode("<tr/>");
+
+                HtmlNode column1 = HtmlNode.CreateNode("<td/>");
+                column1.InnerHtml = generateTicket().Replace("#", "#" + ticketNumber++);
+                row.AppendChild(column1);
+
+                HtmlNode column2 = HtmlNode.CreateNode("<td/>");
+                column2.InnerHtml = generateTicket().Replace("#", "#" + ticketNumber++);
+                row.AppendChild(column2);
+
+                table.AppendChild(row);
+            }
+
+
+
+            File.WriteAllText("output.html", oDoc.DocumentNode.OuterHtml);
+        }
+
+        private string generateTicket()
         {
             string ticketHTML = File.ReadAllText("ticket.html");
 
             HtmlAgilityPack.HtmlDocument oDoc = new HtmlAgilityPack.HtmlDocument();
             oDoc.LoadHtml(ticketHTML);
 
-            //var table = html.DocumentNode.SelectNodes("table").FirstOrDefault();
-            //var node = HtmlNode.CreateNode(rowToAppend);rowtoapend is row html 
-            //table.AppendChild(node);
-            //table.AppendChild(HtmlNode.CreateNode("<tr></tr>"));
-
             HtmlNode table = oDoc.DocumentNode.SelectNodes("table").FirstOrDefault();
-            listAllottedNumbers.Clear();
 
+            Dictionary<int, int[]> dic = getTicketNumbersColumnWise();
+            Dictionary<int, int[]> dic1 = getNumberPositionsByRow();
 
             HtmlNodeCollection rows = table.SelectNodes("tr");
 
-            foreach (HtmlNode row in rows)
+            for (int r = 1; r <= rows.Count; r++)
             {
-                listAllottedColumns.Clear();
+                HtmlNode row = rows[r - 1];
+
                 HtmlNodeCollection columns = row.SelectNodes("td");
 
-                for (int index = 0; index < 5; index++)
-                {
-                    int column = getNextColumn();
-                    int number = getNextNumber();
+                int[] cols = dic1[r];
 
-                    columns[column - 1].InnerHtml = number.ToString();
+                foreach (int col in cols)
+                {
+                    //int column = getNextColumn();
+                    int[] nums = dic[col];
+
+                    int number = nums[r - 1];
+
+                    columns[col - 1].InnerHtml = number.ToString();
                 }
             }
 
             string html = oDoc.DocumentNode.OuterHtml;
+
+            return html;
         }
 
-        private int getNextNumber()
-        {
-            int number = random.Next(1, 99);
 
-            if (listAllottedNumbers.Contains(number))
-            {
-                number = getNextNumber();
-            }
 
-            if (!listAllottedNumbers.Contains(number))
-            {
-                listAllottedNumbers.Add(number);
-            }
 
-            return number;
-        }
-
-        private int getNextColumn()
-        {
-            int column = random.Next(1, 9);
-
-            if (listAllottedColumns.Contains(column))
-            {
-                column = getNextColumn();
-            }
-
-            if (!listAllottedColumns.Contains(column))
-            {
-                listAllottedColumns.Add(column);
-            }
-
-            return column;
-        }
-
-        
     }
 }
