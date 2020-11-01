@@ -1,16 +1,32 @@
 ﻿<style>
-    table {
+    .ticket {
         border-collapse: collapse;
-        margin: 0 10 10 10px;
+        margin: 0 10 10 10px;        
     }
 
-    td {
-        border: 1px solid black;
+    .ticket td {
+        border: 1px solid black !important;
         font-weight: bold;
-        padding: 8px;
-        min-width: 25px;
+        padding: 6px;
+        min-width: 22px;
         text-align: center;
         min-height: 25px;
-        font-size: 17pt;
+        font-size: 14pt;
+    }
+
+    .page {
+        border-collapse: collapse;
+        border: 1px dashed;
+    }
+
+        .page td {
+            border: 1px dashed;
+            padding-top: 8px;
+            page-break-inside: avoid;
+        }
+
+    span {
+        font-size: 12px;
+        padding-left: 10px;
     }
 </style>

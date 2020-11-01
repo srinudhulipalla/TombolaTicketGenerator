@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using iText.Html2pdf;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -157,7 +158,7 @@ namespace TombolaTicketGenerator
 
 
             HtmlAgilityPack.HtmlDocument oDoc = new HtmlAgilityPack.HtmlDocument();
-            oDoc.LoadHtml(styles + Environment.NewLine + "<table style='border-collapse:unset'/>");
+            oDoc.LoadHtml(styles + Environment.NewLine + "<table class='page' />");
 
             var table = oDoc.DocumentNode.SelectNodes("table").FirstOrDefault();
             // var node = HtmlNode.CreateNode(rowToAppend); rowtoapend is row html
@@ -165,7 +166,7 @@ namespace TombolaTicketGenerator
 
             int ticketNumber = 1;
 
-            for (int i = 0; i < 100; i += 2)
+            for (int i = 0; i < 50; i += 2)
             {
                 HtmlNode row = HtmlNode.CreateNode("<tr/>");
 
@@ -180,9 +181,17 @@ namespace TombolaTicketGenerator
                 table.AppendChild(row);
             }
 
-
-
             File.WriteAllText("output.html", oDoc.DocumentNode.OuterHtml);
+
+            using (FileStream pdfDest = File.Open("output.pdf", FileMode.OpenOrCreate))
+            {
+                ConverterProperties converterProperties = new ConverterProperties();
+                HtmlConverter.ConvertToPdf(oDoc.DocumentNode.OuterHtml, pdfDest, converterProperties);
+            }
+
+
+
+            
         }
 
         private string generateTicket()
