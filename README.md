@@ -15,6 +15,6 @@ Click on the 'Generate' button to choose the location where to save the generate
 
 Once the tickets are saved to the given location, dialog promts you success message.
 
-![alt text](https://github.com/srinudhulipalla/TombolaTicketGenerator/blob/main/TombolaTicketGenerator/images/Save%20tickets.png?raw=true)
+![alt text](https://github.com/srinudhulipalla/TombolaTicketGenerator/blob/main/TombolaTicketGenerator/images/Save%20tickets.PNG?raw=true)
 
 Please visit https://www.dotnet4techies.com/ for more other technical articles.
