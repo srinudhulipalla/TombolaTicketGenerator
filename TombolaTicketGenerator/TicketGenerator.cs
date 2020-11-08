@@ -59,9 +59,10 @@ namespace TombolaTicketGenerator
 
                 HtmlNode table = htmlDocument.DocumentNode.SelectNodes("table").FirstOrDefault();
 
+                int ticketsCount = (int)txtTicketCount.Value;
                 int ticketNumber = 1;
 
-                for (int i = 0; i < 50; i += 2)
+                for (int i = 0; i < ticketsCount; i += 2)
                 {
                     HtmlNode row = HtmlNode.CreateNode("<tr/>");
 
@@ -69,9 +70,12 @@ namespace TombolaTicketGenerator
                     column1.InnerHtml = generateTicket().Replace("#", "#" + ticketNumber++);
                     row.AppendChild(column1);
 
-                    HtmlNode column2 = HtmlNode.CreateNode("<td/>");
-                    column2.InnerHtml = generateTicket().Replace("#", "#" + ticketNumber++);
-                    row.AppendChild(column2);
+                    if (i + 1 < ticketsCount)
+                    {
+                        HtmlNode column2 = HtmlNode.CreateNode("<td/>");
+                        column2.InnerHtml = generateTicket().Replace("#", "#" + ticketNumber++);
+                        row.AppendChild(column2);
+                    }
 
                     table.AppendChild(row);
                 }
@@ -125,6 +129,11 @@ namespace TombolaTicketGenerator
         {
             //File.WriteAllText("output.html", html);
 
+            if (File.Exists(outputFilePath))
+            {
+                File.Delete(outputFilePath);
+            }
+
             using (FileStream pdfDestination = File.Open(outputFilePath, FileMode.OpenOrCreate))
             {
                 ConverterProperties converterProperties = new ConverterProperties();
@@ -138,5 +147,9 @@ namespace TombolaTicketGenerator
             this.Dispose();
         }
 
+        private void dotnet4TechiesLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.dotnet4techies.com/");
+        }
     }
 }
