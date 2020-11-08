@@ -135,6 +135,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="bin\Debug\output.html" />
+    <Content Include="images\Ticket Generator Tool.png" />
     <EmbeddedResource Include="bin\Debug\Styles.html" />
     <EmbeddedResource Include="bin\Debug\ticket.html" />
   </ItemGroup>
