@@ -138,6 +138,7 @@
     <Content Include="images\Browse to location.png" />
     <Content Include="images\Save tickets.PNG" />
     <Content Include="images\Ticket Generator Tool.png" />
+    <Content Include="images\Tickets.PNG" />
     <EmbeddedResource Include="bin\Debug\Styles.html" />
     <EmbeddedResource Include="bin\Debug\ticket.html" />
   </ItemGroup>
