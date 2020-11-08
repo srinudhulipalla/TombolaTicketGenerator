@@ -9,11 +9,27 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TombolaTicketGenerator
 {
+    public static class StaticRandom
+    {
+        private static int seed;
+
+        private static ThreadLocal<Random> threadLocal = new ThreadLocal<Random>
+            (() => new Random(Interlocked.Increment(ref seed)));
+
+        static StaticRandom()
+        {
+            seed = Environment.TickCount;
+        }
+
+        public static Random Instance { get { return threadLocal.Value; } }
+    }
+
     public partial class TicketGenerator : Form
     {
         //List<int> listAllottedNumbers = new List<int>();
@@ -115,7 +131,8 @@ namespace TombolaTicketGenerator
 
         private int getNextNumberPosition(List<int> dic)
         {
-            int c = random.Next(1, 9);
+            //int c = random.Next(1, 10);
+            int c = StaticRandom.Instance.Next(1, 10);
 
             if (dic.Contains(c))
             {
@@ -135,7 +152,8 @@ namespace TombolaTicketGenerator
 
             if (endnum == 89) endnum = 90;
 
-            int num = random.Next(startnum, endnum);
+            //int num = random.Next(startnum, endnum + 1);
+            int num = StaticRandom.Instance.Next(startnum, endnum + 1);
 
             if (listAllottedNumbers.Contains(num))
             {
