@@ -17,4 +17,8 @@ Once the tickets are saved to the given location, dialog promts you success mess
 
 ![alt text](https://github.com/srinudhulipalla/TombolaTicketGenerator/blob/main/TombolaTicketGenerator/images/Save%20tickets.PNG?raw=true)
 
+Once you open the generated PDF, BINGO!!!
+
+![alt text](https://github.com/srinudhulipalla/TombolaTicketGenerator/blob/main/TombolaTicketGenerator/images/Tickets.PNG?raw=true)
+
 Please visit https://www.dotnet4techies.com/ for more other technical articles.
