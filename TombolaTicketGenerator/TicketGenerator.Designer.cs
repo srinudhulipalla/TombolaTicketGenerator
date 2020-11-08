@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.button1 = new System.Windows.Forms.Button();
-            this.saveTickets = new System.Windows.Forms.SaveFileDialog();
+            this.saveTicketsDialog = new System.Windows.Forms.SaveFileDialog();
             this.SuspendLayout();
             // 
             // button1
@@ -41,10 +41,6 @@
             this.button1.Text = "Generate";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.btnGenerate_Click);
-            // 
-            // saveTickets
-            // 
-            this.saveTickets.FileOk += new System.ComponentModel.CancelEventHandler(this.saveTickets_FileOk);
             // 
             // TicketGenerator
             // 
@@ -61,6 +57,6 @@
         #endregion
 
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.SaveFileDialog saveTickets;
+        private System.Windows.Forms.SaveFileDialog saveTicketsDialog;
     }
 }
